@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1",
+    "pg": "^8.16.3",
+    "redis": "^5.10.0",
+    "uuid": "^13.0.0"
+  }
+}
