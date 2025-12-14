@@ -120,6 +120,11 @@ app.post('/events/:eventId/seats/reserve', async (req, res) => {
       [eventId]
     );
 
+    if (ev.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
     const confirmed = await client.query(
       `SELECT COUNT(*)::int FROM bookings
        WHERE event_id=$1 AND status='CONFIRMED'`,
@@ -307,6 +312,10 @@ app.get('/events/:eventId', async (req, res) => {
     `SELECT * FROM events WHERE id=$1`,
     [req.params.eventId]
   );
+
+  if (ev.rowCount === 0) {
+    return res.status(404).json({ error: 'Event not found' });
+  }
 
   const confirmed = await pg.query(
     `SELECT COUNT(*)::int FROM bookings
